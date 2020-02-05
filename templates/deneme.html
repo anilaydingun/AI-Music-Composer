@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type='text/javascript' src='//www.midijs.net/lib/midi.js'></script>
+</head>
+<body>
+<a href="#" onClick="MIDIjs.play('../166425473.mid');">Play hinematov.mid</a>
+         <a href="#" onClick="MIDIjs.stop();">Stop MIDI Playback</a>
+
+<script type='text/javascript' src='https://kitchwww.github.io/midi/midi.js'></script>
+
+
+<a href="#" onClick="myfunct()">Play Song</a>
+<script>
+
+function myfunct() {
+    MIDIjs.initAll();
+    MIDIjs.play('../166425473.mid');
+}
+
+</script>
+</body>
+</html>

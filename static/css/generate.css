@@ -1,0 +1,51 @@
+div.header > div {
+
+    float:left;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    display: block;
+    padding: 2px;
+    margin: 0.1vw;
+    height: 12vh;
+    width: 10vw;
+
+
+}
+
+
+
+
+
+
+
+
+
+button#generateButton {
+
+    clear: both;
+    display: block;
+    position: relative;
+    top: 10px;
+
+    width: 41.8vw;
+    height: 3vh;
+
+}
+
+
+
+
+
+
+
+div.container.generate {
+
+    display: block;
+    max-height: 40vh;
+    width: 41.8vw;
+    margin-top: 25vh;
+
+    margin-left: auto;
+    margin-right: auto;
+
+}

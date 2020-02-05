@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head><meta charset="UTF-8">
+    <script type='text/javascript' src='//www.midijs.net/lib/midi.js'></script>
+    <style>
+
+        body, html {
+
+            overflow: hidden;
+
+        }
+
+    </style>
+
+
+        <!-- deneme --->
+<!-- {#    <link href="/static/css/deneme.css" rel="stylesheet">#}
+{#    <link href="https://cdn.plyr.io/3.5.6/plyr.css" rel="stylesheet">#}
+
+        {# music player   #}
+{#    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400" rel="stylesheet">#}
+{#    <link href="/static/css/musicplayer.css" rel="stylesheet">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1">#} -->
+
+
+<!-- {#    <script src="https://kit.fontawesome.com/e04ccf61b7.js" crossorigin="anonymous"></script>#} -->
+{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">#}
+{#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>#}
+{#    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>#}
+{#    <link rel="stylesheet" href="/static/LibraryCss/generate.css">#}
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,500,600" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/LibraryCss/musicplayer3.css" rel="stylesheet" media=all>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+{#    <link href="/static/LibraryCss/bootstrap.min.css" rel="stylesheet">#}
+
+
+    <title>MP3 Player</title>
+
+
+    <script>
+
+
+        function goPlayer(){
+
+            document.getElementById("seeSamples").click();
+
+        }
+
+        function createSuccess(){
+
+            let pr = document.getElementById("successOnCreate");
+            let ch = document.createElement("p");
+            ch.setAttribute("id","successPrg");
+            ch.innerText = "Successfully Created!";
+
+            pr.appendChild(ch);
+        }
+
+
+        function deleteSuccess(data){
+
+            document.getElementById("successPrg").remove();
+
+            let sampleContainer = document.getElementById("sampleMusics");
+
+            let newSample = document.createElement("button");
+            newSample.setAttribute("class", "sampleMusic");
+            newSample.setAttribute("onclick", "MIDIjs.stop(); playSample(\""+data+"\");");
+            newSample.innerText = "Sample Song";
+            sampleContainer.appendChild(newSample);
+
+        }
+
+
+        function playSample(data){
+
+            const playButton = document.getElementById("playButton");
+            playButton.innerHTML = "Play";
+            playButton.setAttribute("onclick", "MIDIjs.play(\""+data+"\"); togglePlayButton(event); deleteSuccess(\""+data+"\");");
+            playButton.click();
+
+        }
+
+
+
+        function playMusic(data){
+
+            goPlayer();
+            createSuccess();
+
+            const playButton = document.getElementById("playButton");
+            playButton.innerHTML = "Play";
+            playButton.setAttribute("onclick", "MIDIjs.play(\""+data+"\"); togglePlayButton(event); deleteSuccess(\""+data+"\");");
+
+        }
+
+
+        function togglePlayButton(e){
+
+            const playButton = e.target;
+
+            playButton.innerHTML = "Pause";
+            playButton.setAttribute("onclick", "MIDIjs.pause(); toggleStopButton(event);")
+
+        }
+
+
+
+        function toggleStopButton(e){
+
+            const stopButton = e.target;
+
+            stopButton.innerHTML = "Resume";
+            stopButton.setAttribute("onclick", "MIDIjs.resume(); togglePlayButton(event);")
+
+        }
+
+    </script>
+
+
+
+
+</head>
+<body>
+<!-- app root container   Deneme-->
+
+
+<!-- musicplayer -->
+
+
+<header class="hero" id="generate">
+<div class="tab-row">
+<div class = "col-12">
+<div class="content" style="display: block">
+
+<script>
+
+        function hideSelectors (e) {
+
+            document.getElementById("generateSelectors").style.display = "block";
+            e.target.style.display = "none";
+
+        }
+
+    </script>
+
+<p>BMM419 Project: AI Music Composer</p>
+<button class="btn btn-outline-warning btn-lg" id="hide" onclick="hideSelectors(event)">Set Features</button>
+
+
+
+
+
+
+    <style>
+
+        div.seeSamples {
+
+            display: block;
+            position: absolute;
+            bottom: 1vh;
+            left: 45vw;
+            color: #f7f7f7;
+            width: 10vw;
+            text-align: center;
+            border: 0px solid #ffff00;
+
+        }
+
+    </style>
+
+
+<!--<button class="cta">Generate Music</button>-->
+
+</div>
+
+      <div id="generateSelectors" style="display: none" >
+          <div class="header" id="header" >
+
+                {% for key,value in forward_message.instruments.items() %}
+                    <div id="{{ value.program }}" style="font-size:24px"  >
+                    <input type="checkbox"  id="instrument{{ value.program }}" onchange="toggleFeatures(event, {{ value.program }})" /> <span class="spInstrument" id="spInstrument{{ value.program }}"> {{ value.name }} </span> <br />
+                    {% if value.model_velocity != None %}
+                        <input type="checkbox" id="velocity{{ value.program }}" style="display: none" /> <span class="spFeature" id="spVelocity{{ value.program }}" style="display: none"> Velocity </span>
+                    {% endif %}
+                    {% if value.model_length != None %}
+                        <input type="checkbox" id="length{{ value.program }}" style="display: none"/> <span class="spFeature" id="spLength{{ value.program }}" style="display: none"> Length </span>
+                    {% endif %}
+                    {% if value.model_offset != None %}
+                        <input type="checkbox" id="offset{{ value.program }}" style="display: none" /> <span class="spFeature" id="spOffset{{ value.program }}" style="display:none"> Offset </span>
+                    {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+          {#     <button class="btn btn-outline-warning btn-lg" id="hide" onclick="generate()">Generate</button> #}
+           <button id="generateButton" class="btn btn-outline-danger btn-lg" onclick="generate(); loading();">Generate</button>
+      </div>
+  <script>
+
+
+        function toggleFeatures(e, program){
+
+            const velocity = document.getElementById("velocity" + program);
+            const length = document.getElementById("length" + program);
+            const offset = document.getElementById("offset" + program);
+
+            const spVelocity = document.getElementById("spVelocity" + program);
+            const spLength = document.getElementById("spLength" + program);
+            const spOffset = document.getElementById("spOffset" + program);
+
+
+
+            if (e.target.checked) {
+
+                if (velocity != null)
+                    velocity.style.display = "inline-block";
+                if (spVelocity != null)
+                spVelocity.style.display = "inline";
+
+                if (length != null)
+                    length.style.display = "inline-block";
+                if(spLength != null)
+                    spLength.style.display = "inline";
+
+                if(offset != null)
+                    offset.style.display = "inline-block";
+                if(spOffset != null)
+                    spOffset.style.display = "inline";
+
+            } else {
+
+                if (velocity != null) {
+                    velocity.style.display = "none";
+                    velocity.checked = false;
+                }
+                if (spVelocity != null)
+                    spVelocity.style.display = "none";
+
+                if(length != null) {
+                    length.style.display = "none";
+                    length.checked = false;
+                }
+                if(spLength != null)
+                    spLength.style.display = "none";
+
+                if(offset != null) {
+                    offset.style.display = "none";
+                    offset.checked = false;
+                }
+                if(spOffset != null)
+                    spOffset.style.display = "none";
+
+            }
+
+        }
+
+
+        function generate() {
+
+            document.getElementById("generateSelectors").style.display="none";
+
+            let settings = "";
+
+            const header = document.getElementById("header");
+            let instruments = header.children;
+            let i;
+            for (i = 0; i < instruments.length; i++) {
+
+                const instrument = instruments[i];
+
+                const pitch = document.getElementById("instrument" + instrument.id);
+                const velocity = document.getElementById("velocity" + instrument.id);
+                const length = document.getElementById("length" + instrument.id);
+                const offset = document.getElementById("offset" + instrument.id);
+
+                let data = {
+                    program: instrument.id,
+                    velocity: false,
+                    length: false,
+                    offset: false
+                };
+
+                if (pitch != null && pitch.checked) {
+
+                    if (velocity != null && velocity.checked) {
+                        data.velocity = true;
+                    } else {
+                        data.velocity = false;
+                    }
+                    if (length != null && length.checked) {
+                        data.length = true;
+                    } else {
+                        data.length = false;
+                    }
+                    if (offset != null && offset.checked) {
+                        data.offset = true;
+                    } else {
+                        data.offset = false;
+                    }
+
+                    settings += JSON.stringify(data) + ",";
+                }
+
+
+            }
+            if (settings.length > 1)
+                settings = settings.slice(0, settings.length - 1);
+
+            if (settings != "{}") {
+                let xhr = new XMLHttpRequest();
+                xhr.open("POST", "/gen");
+                //xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+
+                xhr.onload = function () {
+
+                    var data = this.response;
+
+                    if (xhr.status >= 200 && xhr.status < 400) {
+
+                        document.getElementById("newid").remove();
+                        document.getElementById("hide").style.display = "inline-block";
+
+                        playMusic(data);
+
+                    } else {
+                        document.write("It's not working...");
+                    }
+
+                }
+
+                xhr.send(settings);
+            }
+        }
+</script>
+</div>
+</div>
+<div class="seeSamples"><p class="passtomain"><a href="#samples" id="seeSamples">See Samples</a></p></div>
+</header>
+
+<main class="main" id="samples">
+
+    <section class="feature">
+        <a class="composeAMusic" href="#generate">Compose a Music</a>
+      <div class="tab-row">
+        <div class="col-12">
+
+
+            <style>
+
+
+                .composeAMusic {
+
+                    font-size: 22pt;
+                    position: relative;
+                    bottom: -1vh;
+                    right: 0.5vw;
+
+
+                }
+
+            </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="successOnCreate"></div>
+            <div id="playerContainer">
+
+                <div id="progressBar">
+                    <div id="progressBall"></div>
+                </div>
+
+
+                <button id="backwardButton" class="btn btn-success">Backward</button>
+                <button id="playButton" class="btn btn-success">Play</button>
+                <button id="forwardButton" class="btn btn-success">Forward</button>
+
+{#                <div id="sampleMusics"></div>#}
+
+            </div>
+
+
+<h2>Sample Musics</h2>
+          <audio id="myAudio" ontimeupdate="onTimeUpdate()">
+      <!-- <source src="audio.ogg" type="audio/ogg"> -->
+      <source id="source-audio" src="" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+
+    <div class="player-ctn" id="card1">
+      <div class="infos-ctn">
+        <div class="timer">00:00</div>
+        <div class="title"></div>
+        <div class="duration">00:00</div>
+      </div>
+      <div id="myProgress">
+        <div id="myBar"></div>
+      </div>
+      <div class="btn-ctn">
+         <div class="btn-action first-btn" onclick="previous()">
+            <div id="btn-faws-back">
+              <i class='fas fa-step-backward'></i>
+            </div>
+         </div>
+         <div class="btn-action" onclick="rewind()">
+            <div id="btn-faws-rewind">
+              <i class='fas fa-backward'></i>
+            </div>
+         </div>
+         <div class="btn-action" onclick="toggleAudio()">
+            <div id="btn-faws-play-pause">
+              <i class='fas fa-play' id="icon-play"></i>
+              <i class='fas fa-pause' id="icon-pause" style="display: none"></i>
+            </div>
+         </div>
+         <div class="btn-play" onclick="forward()">
+            <div id="btn-faws-forward">
+              <i class='fas fa-forward'></i>
+            </div>
+         </div>
+         <div class="btn-action" onclick="next()">
+            <div id="btn-faws-next">
+              <i class='fas fa-step-forward'></i>
+            </div>
+         </div>
+         <div class="btn-mute" id="toggleMute" onclick="toggleMute()">
+            <div id="btn-faws-volume">
+              <i id="icon-vol-up" class='fas fa-volume-up'></i>
+              <i id="icon-vol-mute" class='fas fa-volume-mute' style="display: none"></i>
+            </div>
+         </div>
+      </div>
+      <div class="playlist-ctn"></div>
+    </div>
+
+
+
+
+
+
+
+
+        </div>
+        
+      </div>
+
+  </section>
+</main>
+
+<footer class="footer">
+    <div class="row">
+      <div class="col-6">
+        <p><i class="fa fa-phone" aria-hidden="true"></i> +44 (0)123 456 789</p>
+			<p><i class="fa fa-envelope" aria-hidden="true"></i> info@landingpage.com</p>
+      </div>
+      <div class="col-6" style="text-align: right;">
+        <h3>Heading</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi a unde iste harum quis veritatis laudantium tempora, error veniam, incidunt?</p>
+        </ul>
+      </div>
+    </div>
+    <hr>
+
+</footer>
+
+
+
+
+<!--deneme-->
+<!-- {#<script src="/static/js/deneme.js"></script>#} -->
+{#<script src="/static/Libraries/jquery.min.js"></script>#}
+{#<script src="/static/Libraries/html5media.min.js"></script>#}
+{#<script src="/static/Libraries/plyr.min.js"></script>#}
+{#<script src="/static/Libraries/vue.min.js"></script>#}
+
+<!--musicplayer-->
+<!-- {#<script src="/static/js/musicplayer.js"></script>#} -->
+<!-- {#<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.0/vue.min.js"></script>#} -->
+{#<script src="/static/Libraries/bootstrap.min.js" ></script>#}
+{#<script src="/static/Libraries/ahmet.js" crossorigin="anonymous"></script>#}
+{#<script src="/static/Libraries/jquery-2.2.4.min.js" ></script>#}
+
+<!-- <script src="Libraries/hide.js"></script> -->
+
+<script src="/static/Libraries/loading.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5media/1.1.8/html5media.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.5.6/plyr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.0/vue.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+{#<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>#}
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+<script src="https://kit.fontawesome.com/a062562745.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" ></script>
+<script src="/static/Libraries/musicplayer3.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"> </script>
+<script type=text/javascript> $(function() { $("#mybutton").click(function (event) { $.getJSON('/SomeFunction', { }, function(data) { }); return false; }); }); </script>
+{#<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>#}
+{#<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>#}
+<script src= "/static/Libraries/check.js"></script>#}
+<script src="/static/Libraries/hidemain.js"></script>
+
+</body>
+</html>
